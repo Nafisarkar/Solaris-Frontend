@@ -2,17 +2,6 @@
 
 A robust front-end project (with references to a MERN full-stack setup) designed for seamless management and organization of digital posters. Solaris provides features such as user registration, login with JWT-based authentication, form validation, and fluid UI/UX using Shadcn UI + Tailwind CSS.
 
-## Table of Contents
-- Features
-- Tech Stack
-- Project Structure
-- Prerequisites
-- Getting Started
-- Available Scripts
-- Environment Variables
-- Contributing
-- License
-
 ---
 
 ## Features

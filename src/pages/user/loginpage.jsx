@@ -19,10 +19,10 @@ import { useUserContext } from "../../context/userContext";
 import { userLogout } from "../../controllers/logout.controller";
 
 const Loginpage = () => {
-  const { isLoggedin, setIsLoggedin, setUserNameNav } = useUserContext();
   const navigator = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const { toast } = useToast();
+  const { isLoggedin, setIsLoggedin, setUserNameNav } = useUserContext();
   const [user, setUser] = useState({ email: "", password: "" });
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 

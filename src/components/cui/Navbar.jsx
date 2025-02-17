@@ -1,14 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { Link, useLocation } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
-import checkLoginUser from '../../validator/loginchecker';
+import checkLoginUser from "../../validator/loginchecker";
+import { UserContext } from "@/context/userContext";
 
-function Navbar({ isLoggedin, setIsLoggedin, userNameNav }) {
+function Navbar() {
+  const { isLoggedin, setIsLoggedin, userNameNav } = useContext(UserContext);
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
-  const [isHallOfFameDropdownOpen, setIsHallOfFameDropdownOpen] = useState(false);
+  const [isHallOfFameDropdownOpen, setIsHallOfFameDropdownOpen] =
+    useState(false);
 
   const location = useLocation();
 
@@ -16,12 +20,12 @@ function Navbar({ isLoggedin, setIsLoggedin, userNameNav }) {
     const checkLogin = async () => {
       const isLoggedIn = await checkLoginUser();
       setIsLoggedin(isLoggedIn);
-      console.log(`Navbar : User is ${isLoggedIn ? 'Logged In' : 'Not Logged In'}`);
-      
+      console.log(
+        `Navbar : User is ${isLoggedIn ? "Logged In" : "Not Logged In"}`
+      );
     };
     checkLogin();
   }, [setIsLoggedin]);
-
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -57,82 +61,177 @@ function Navbar({ isLoggedin, setIsLoggedin, userNameNav }) {
 
   return (
     <>
-     <div className='mt-2 mx-4 sm:mx-8 md:mx-12 lg:mx-16 xl:mx-20'>
-      <div className="relative">
-        <nav className="relative z-50 flex flex-col items-center justify-between py-4 shadow-md backdrop-blur-lg bg-black/80">
-          <div className="container mx-auto flex items-center justify-between px-12">
-            <Link to="/" className="text-4xl font-bold font-Bigelow">
-              SOLARIS
-            </Link>
-            <button
-              className="lg:hidden focus:outline-none"
-              onClick={toggleMenu}
-              aria-label="Toggle navigation"
+      <div className="mt-2 mx-4 sm:mx-8 md:mx-12 lg:mx-16 xl:mx-20">
+        <div className="relative">
+          <nav className="relative z-50 flex flex-col items-center justify-between py-4 shadow-md backdrop-blur-lg bg-black/80">
+            <div className="container mx-auto flex items-center justify-between px-12">
+              <Link to="/" className="text-4xl font-bold font-Bigelow">
+                SOLARIS
+              </Link>
+              <button
+                className="lg:hidden focus:outline-none"
+                onClick={toggleMenu}
+                aria-label="Toggle navigation"
+              >
+                <RxHamburgerMenu className="w-6 h-6" />
+              </button>
+              <div className="hidden lg:flex items-center space-x-8">
+                <button
+                  onClick={toggleAccountDropdown}
+                  className="flex items-center text-lg font-Arapey py-2 px-2 hover:bg-white/10 rounded transition-colors"
+                >
+                  {userNameNav
+                    ? userNameNav.charAt(0).toUpperCase() + userNameNav.slice(1)
+                    : "Profile"}
+                  <ChevronDown className="ml-1 h-2 w-2" />
+                </button>
+                <button
+                  onClick={toggleCategoryDropdown}
+                  className="flex items-center text-lg font-Arapey py-2 px-2 hover:bg-white/10 rounded transition-colors"
+                >
+                  Categories
+                  <ChevronDown className="ml-1 h-2 w-2" />
+                </button>
+                <button
+                  onClick={toggleHallOfFameDropdown}
+                  className="flex items-center text-lg font-Arapey py-2 px-2 hover:bg-white/10 rounded transition-colors"
+                >
+                  Hall Of Fame
+                  <ChevronDown className="ml-1 h-2 w-2" />
+                </button>
+              </div>
+            </div>
+            <div
+              className={`${
+                isMenuOpen ? "flex" : "hidden"
+              } lg:hidden flex-col w-full mt-4`}
             >
-              <RxHamburgerMenu className="w-6 h-6" />
-            </button>
-            <div className="hidden lg:flex items-center space-x-8">
-              <button onClick={toggleAccountDropdown} className="flex items-center text-lg font-Arapey py-2 px-2 hover:bg-white/10 rounded transition-colors">
-                { userNameNav ? userNameNav.charAt(0).toUpperCase() + userNameNav.slice(1) : 'Profile' }
+              <button
+                onClick={toggleAccountDropdown}
+                className="flex items-center text-lg font-Arapey py-2 px-12 hover:bg-white/10 transition-colors"
+              >
+                {userNameNav
+                  ? userNameNav.charAt(0).toUpperCase() + userNameNav.slice(1)
+                  : "Profile"}
                 <ChevronDown className="ml-1 h-2 w-2" />
               </button>
-              <button onClick={toggleCategoryDropdown} className="flex items-center text-lg font-Arapey py-2 px-2 hover:bg-white/10 rounded transition-colors">
+              <button
+                onClick={toggleCategoryDropdown}
+                className="flex items-center text-lg font-Arapey py-2 px-12 hover:bg-white/10 transition-colors"
+              >
                 Categories
                 <ChevronDown className="ml-1 h-2 w-2" />
               </button>
-              <button onClick={toggleHallOfFameDropdown} className="flex items-center text-lg font-Arapey py-2 px-2 hover:bg-white/10 rounded transition-colors">
+              <button
+                onClick={toggleHallOfFameDropdown}
+                className="flex items-center text-lg font-Arapey py-2 px-12 hover:bg-white/10 transition-colors"
+              >
                 Hall Of Fame
                 <ChevronDown className="ml-1 h-2 w-2" />
               </button>
             </div>
-          </div>
-          <div className={`${isMenuOpen ? 'flex' : 'hidden'} lg:hidden flex-col w-full mt-4`}>
-            <button onClick={toggleAccountDropdown} className="flex items-center text-lg font-Arapey py-2 px-12 hover:bg-white/10 transition-colors">
-             { userNameNav ?  userNameNav.charAt(0).toUpperCase() + userNameNav.slice(1) : 'Profile'}
-              <ChevronDown className="ml-1 h-2 w-2" />
-            </button>
-            <button onClick={toggleCategoryDropdown} className="flex items-center text-lg font-Arapey py-2 px-12 hover:bg-white/10 transition-colors">
-              Categories
-              <ChevronDown className="ml-1 h-2 w-2" />
-            </button>
-            <button onClick={toggleHallOfFameDropdown} className="flex items-center text-lg font-Arapey py-2 px-12 hover:bg-white/10 transition-colors">
-              Hall Of Fame
-              <ChevronDown className="ml-1 h-2 w-2" />
-            </button>
-          </div>
-        </nav>
-        {isAccountDropdownOpen && (
-          <div className="absolute z-50 w-full shadow-lg backdrop-blur-lg bg-black/80 font-Arapey">
-            <div className="px-12 py-4" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-              {isLoggedin ? (
-                <Link to="/loginpage" className="block text-base py-2 hover:underline" role="menuitem">Logout</Link>
-              ) : (
-                  <Link to="/loginpage" className="block text-base py-2 hover:underline" role="menuitem">Login</Link>
-              )}
+          </nav>
+          {isAccountDropdownOpen && (
+            <div className="absolute z-50 w-full shadow-lg backdrop-blur-lg bg-black/80 font-Arapey">
+              <div
+                className="px-12 py-4"
+                role="menu"
+                aria-orientation="vertical"
+                aria-labelledby="options-menu"
+              >
+                {isLoggedin ? (
+                  <Link
+                    to="/loginpage"
+                    className="block text-base py-2 hover:underline"
+                    role="menuitem"
+                  >
+                    Logout
+                  </Link>
+                ) : (
+                  <Link
+                    to="/loginpage"
+                    className="block text-base py-2 hover:underline"
+                    role="menuitem"
+                  >
+                    Login
+                  </Link>
+                )}
+              </div>
             </div>
-          </div>
-        )}
-        {isCategoryDropdownOpen && (
-          <div className="absolute z-50 w-full shadow-lg backdrop-blur-lg bg-black/80 font-Arapey">
-            <div className="px-12 py-4" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-              <Link to="/category/" className="block text-base py-2 hover:underline" role="menuitem">Anime</Link>
-              <Link to="/category/" className="block text-base py-2 hover:underline" role="menuitem">Movie</Link>
-              <Link to="/category/" className="block text-base py-2 hover:underline" role="menuitem">Cars</Link>
-              <Link to="/category/" className="block text-base py-2 hover:underline" role="menuitem">Asthetic</Link>
+          )}
+          {isCategoryDropdownOpen && (
+            <div className="absolute z-50 w-full shadow-lg backdrop-blur-lg bg-black/80 font-Arapey">
+              <div
+                className="px-12 py-4"
+                role="menu"
+                aria-orientation="vertical"
+                aria-labelledby="options-menu"
+              >
+                <Link
+                  to="/category/"
+                  className="block text-base py-2 hover:underline"
+                  role="menuitem"
+                >
+                  Anime
+                </Link>
+                <Link
+                  to="/category/"
+                  className="block text-base py-2 hover:underline"
+                  role="menuitem"
+                >
+                  Movie
+                </Link>
+                <Link
+                  to="/category/"
+                  className="block text-base py-2 hover:underline"
+                  role="menuitem"
+                >
+                  Cars
+                </Link>
+                <Link
+                  to="/category/"
+                  className="block text-base py-2 hover:underline"
+                  role="menuitem"
+                >
+                  Asthetic
+                </Link>
+              </div>
             </div>
-          </div>
-        )}
-        {isHallOfFameDropdownOpen && (
-          <div className="absolute z-50 w-full shadow-lg backdrop-blur-lg bg-black/80 font-Arapey">
-            <div className="px-12 py-4" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-              <Link to="/category/" className="block text-base py-2 hover:underline" role="menuitem">Super Hero</Link>
-              <Link to="/category/" className="block text-base py-2 hover:underline" role="menuitem">Super Cars</Link>
-              <Link to="/category/" className="block text-base py-2 hover:underline" role="menuitem">Gen Z</Link>
+          )}
+          {isHallOfFameDropdownOpen && (
+            <div className="absolute z-50 w-full shadow-lg backdrop-blur-lg bg-black/80 font-Arapey">
+              <div
+                className="px-12 py-4"
+                role="menu"
+                aria-orientation="vertical"
+                aria-labelledby="options-menu"
+              >
+                <Link
+                  to="/category/"
+                  className="block text-base py-2 hover:underline"
+                  role="menuitem"
+                >
+                  Super Hero
+                </Link>
+                <Link
+                  to="/category/"
+                  className="block text-base py-2 hover:underline"
+                  role="menuitem"
+                >
+                  Super Cars
+                </Link>
+                <Link
+                  to="/category/"
+                  className="block text-base py-2 hover:underline"
+                  role="menuitem"
+                >
+                  Gen Z
+                </Link>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
     </>
   );
 }

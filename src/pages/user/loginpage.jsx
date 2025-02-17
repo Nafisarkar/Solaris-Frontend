@@ -1,34 +1,29 @@
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
-import { Link, useNavigate } from 'react-router';
-import Cookies from 'universal-cookie';
-import axios from 'axios';
-import checkLoginUser from '../../validator/loginchecker';
-import { deleteLocalStorage } from '../../../helper/userLocalStorage';
-import { useToast } from "@/hooks/use-toast"
-import { validateLogin } from '../../validator/validator';
+import { Link, useNavigate } from "react-router";
+import Cookies from "universal-cookie";
+import axios from "axios";
+import { useToast } from "@/hooks/use-toast";
+import { validateLogin } from "../../validator/validator";
+import getRandomEmojis from "../../helper/randomemoji";
+import { useUserContext } from "../../context/userContext";
+import { userLogout } from "../../controllers/logout.controller";
 
-
-const Loginpage = ({ isLoggedin, setIsLoggedin, setUserNameNav }) => {
-
-  const getRandomEmojis = () => {
-    const emojis = ['❤️', '😍', '🥰', '💖', '💕', '💘', '🌹', '✨', '💫', '🦋', '🍀', '🌺', '🎉', '🌟', '🍭', '🦄', '🌻', '🌸']
-    return emojis[Math.floor(Math.random() * emojis.length)]
-  }
+const Loginpage = () => {
+  const { isLoggedin, setIsLoggedin, setUserNameNav } = useUserContext();
   const navigator = useNavigate();
-
   const [showPassword, setShowPassword] = useState(false);
-  const { toast } = useToast()
-
+  const { toast } = useToast();
   const [user, setUser] = useState({ email: "", password: "" });
-
-  useEffect(() => {
-    setIsLoggedin(checkLoginUser());
-  }, [setIsLoggedin]);
-
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   const handleLogin = () => {
@@ -40,47 +35,48 @@ const Loginpage = ({ isLoggedin, setIsLoggedin, setUserNameNav }) => {
         duration: 2000,
         title: "Login Failed",
         description: Error[0],
-      })
+      });
       return;
     }
 
-    axios.post('http://localhost:3000/api/user/login', user)
+    axios
+      .post("http://localhost:3000/api/user/login", user)
       .then((response) => {
         const cookies = new Cookies();
-        cookies.set('cookie', response.data.cookie, { path: '/' });
-        localStorage.setItem('userData', JSON.stringify(response.data.data));
+        cookies.set("cookie", response.data.cookie, { path: "/" });
+        localStorage.setItem("userData", JSON.stringify(response.data.data));
         setIsLoggedin(true);
         setUserNameNav(response.data.data.name);
         toast({
           variant: "default",
-          duration: 3000,
-          title: `Welcome, ${response.data.data.name}! ${getRandomEmojis()}`,  
+          duration: 2000,
+          title: `Welcome, ${response.data.data.name}! ${getRandomEmojis()}`,
           description: "You have successfully logged in.",
         });
-        navigator('/');
+        navigator("/");
       })
       .catch((error) => {
         toast({
           variant: "destructive",
           title: "Login Failed",
-          description: error.response?.data?.message || "Please check your credentials and try again.",
+          description:
+            error.response?.data?.message ||
+            "Please check your credentials and try again.",
         });
         console.error("Login error:", error);
       });
   };
 
   const handleLogout = () => {
-    axios.delete('http://localhost:3000/api/user/logout')
-      .then((response) => {
-        const cookies = new Cookies();
-        cookies.remove('cookie');
-        deleteLocalStorage();
-        setIsLoggedin(false);
-        setUserNameNav("");
-        console.log("loginpage : Logout Successful " +response.data.message);
-      })
-      .catch((error) => console.log(error.response.data.message));
-  }
+    userLogout(setIsLoggedin, setUserNameNav).catch((error) => {
+      toast({
+        variant: "destructive",
+        title: "Logout Failed",
+        description: "Unable to logout. Please try again.",
+      });
+      console.error("Logout error:", error);
+    });
+  };
 
   return (
     <div className=" flex items-center justify-center">
@@ -91,7 +87,9 @@ const Loginpage = ({ isLoggedin, setIsLoggedin, setUserNameNav }) => {
               {isLoggedin ? "Logged In" : "Login"}
             </CardTitle>
             <CardDescription className="text-sm text-muted-foreground">
-              {isLoggedin ? "You are currently logged in" : "Enter your credentials to access your account"}
+              {isLoggedin
+                ? "You are currently logged in"
+                : "Enter your credentials to access your account"}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -104,7 +102,7 @@ const Loginpage = ({ isLoggedin, setIsLoggedin, setUserNameNav }) => {
                   placeholder="Enter Your Email"
                   className="w-full px-4 py-1 border-2 border-input rounded-md outline-none focus:border-accent placeholder:opacity-20"
                   value={user.email}
-                  onChange={(e) => setUser({...user, email: e.target.value})}
+                  onChange={(e) => setUser({ ...user, email: e.target.value })}
                 />
                 <div className="relative">
                   <Input
@@ -112,7 +110,9 @@ const Loginpage = ({ isLoggedin, setIsLoggedin, setUserNameNav }) => {
                     placeholder="Enter Your Password"
                     className="w-full px-4 py-2 border-2 border-input rounded-md outline-none focus:border-accent placeholder:opacity-20"
                     value={user.password}
-                    onChange={(e) => setUser({...user, password: e.target.value})}
+                    onChange={(e) =>
+                      setUser({ ...user, password: e.target.value })
+                    }
                   />
                   <button
                     type="button"
@@ -122,8 +122,13 @@ const Loginpage = ({ isLoggedin, setIsLoggedin, setUserNameNav }) => {
                     {showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
                   </button>
                 </div>
-                <div className='flex flex-col gap-1'>
-                  <Link to={"/createuserpage"} className="text-[10px] text-muted-foreground hover:underline">New here? Sign up</Link>
+                <div className="flex flex-col gap-1">
+                  <Link
+                    to={"/createuserpage"}
+                    className="text-[10px] text-muted-foreground hover:underline"
+                  >
+                    New here? Sign up
+                  </Link>
                   <Button onClick={handleLogin}>Log In</Button>
                 </div>
               </>

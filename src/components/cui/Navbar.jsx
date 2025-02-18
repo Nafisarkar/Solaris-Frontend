@@ -104,6 +104,7 @@ function Navbar() {
                   className="flex items-center text-lg font-Arapey py-2 px-2 hover:underline"
                 >
                   About Us
+                  <ChevronDown className="ml-1 h-2 w-2" />
                 </Link>
               </div>
             </div>

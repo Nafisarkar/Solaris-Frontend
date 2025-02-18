@@ -78,7 +78,7 @@ function Navbar() {
               <div className="hidden lg:flex items-center space-x-8">
                 <button
                   onClick={toggleAccountDropdown}
-                  className="flex items-center text-lg font-Arapey py-2 px-2 hover:bg-white/10 rounded transition-colors"
+                  className="flex items-center text-lg font-Arapey py-2 px-2 hover:underline"
                 >
                   {userNameNav
                     ? userNameNav.charAt(0).toUpperCase() + userNameNav.slice(1)
@@ -87,14 +87,14 @@ function Navbar() {
                 </button>
                 <button
                   onClick={toggleCategoryDropdown}
-                  className="flex items-center text-lg font-Arapey py-2 px-2 hover:bg-white/10 rounded transition-colors"
+                  className="flex items-center text-lg font-Arapey py-2 px-2 hover:underline"
                 >
                   Categories
                   <ChevronDown className="ml-1 h-2 w-2" />
                 </button>
                 <button
                   onClick={toggleHallOfFameDropdown}
-                  className="flex items-center text-lg font-Arapey py-2 px-2 hover:bg-white/10 rounded transition-colors"
+                  className="flex items-center text-lg font-Arapey py-2 px-2 hover:underline"
                 >
                   Hall Of Fame
                   <ChevronDown className="ml-1 h-2 w-2" />

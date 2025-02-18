@@ -383,7 +383,7 @@ const ProductPage = () => {
       {/* Particles wrapper with fixed positioning */}
       <div className="fixed inset-0">
         <Particles
-          className="w-full h-full opacity-80"
+          className="w-full h-full opacity-100"
           quantity={140}
           ease={20}
           refresh={true}
@@ -420,7 +420,7 @@ const ProductPage = () => {
                           className="w-full h-full object-cover rounded-t-lg"
                         />
                       </CardHeader>
-                      <CardContent className="p-1 bg-secondary/5 min-h-[2rem] flex items-center justify-center">
+                      <CardContent className="p-1 min-h-[2rem] flex items-center justify-center shadow-md backdrop-blur-lg bg-black/50">
                         <h3 className="text-xs font-semibold truncate font-Poppins ">
                           {product.name}
                         </h3>

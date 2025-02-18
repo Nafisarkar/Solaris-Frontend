@@ -63,7 +63,7 @@ function Navbar() {
     <>
       <div className="mt-2 mx-4 sm:mx-8 md:mx-12 lg:mx-16 xl:mx-20">
         <div className="relative">
-          <nav className="relative z-50 flex flex-col items-center justify-between py-4 shadow-md backdrop-blur-lg bg-black/80">
+          <nav className="relative z-50 flex flex-col items-center justify-between py-4 shadow-md backdrop-blur-lg bg-black/50">
             <div className="container mx-auto flex items-center justify-between px-12">
               <Link to="/" className="text-4xl font-bold font-Bigelow">
                 SOLARIS
@@ -99,6 +99,12 @@ function Navbar() {
                   Hall Of Fame
                   <ChevronDown className="ml-1 h-2 w-2" />
                 </button>
+                <Link
+                  to={"/aboutpage"}
+                  className="flex items-center text-lg font-Arapey py-2 px-2 hover:underline"
+                >
+                  About Us
+                </Link>
               </div>
             </div>
             <div
@@ -108,7 +114,7 @@ function Navbar() {
             >
               <button
                 onClick={toggleAccountDropdown}
-                className="flex items-center text-lg font-Arapey py-2 px-12 hover:bg-white/10 transition-colors"
+                className="flex items-center text-lg font-Arapey py-2 px-12 hover:underline"
               >
                 {userNameNav
                   ? userNameNav.charAt(0).toUpperCase() + userNameNav.slice(1)
@@ -117,18 +123,25 @@ function Navbar() {
               </button>
               <button
                 onClick={toggleCategoryDropdown}
-                className="flex items-center text-lg font-Arapey py-2 px-12 hover:bg-white/10 transition-colors"
+                className="flex items-center text-lg font-Arapey py-2 px-12 hover:underline"
               >
                 Categories
                 <ChevronDown className="ml-1 h-2 w-2" />
               </button>
               <button
                 onClick={toggleHallOfFameDropdown}
-                className="flex items-center text-lg font-Arapey py-2 px-12 hover:bg-white/10 transition-colors"
+                className="flex items-center text-lg font-Arapey py-2 px-12 hover:underline"
               >
                 Hall Of Fame
                 <ChevronDown className="ml-1 h-2 w-2" />
               </button>
+              <Link
+                to="/aboutpage"
+                className="flex items-center text-lg font-Arapey py-2 px-12 hover:underline"
+              >
+                About Us
+                <ChevronDown className="ml-1 h-2 w-2" />
+              </Link>
             </div>
           </nav>
           {isAccountDropdownOpen && (

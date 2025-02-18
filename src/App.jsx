@@ -8,6 +8,7 @@ import Notfoundpage from "./pages/user/notfoundpage";
 import { Toaster } from "@/components/ui/toaster";
 import { UserProvider } from "@/context/userContext";
 import Productpage from "./pages/product/productpage";
+import Aboutpage from "./pages/aboutpage";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
               path="/category/:productcetagoryname"
               element={<Productpage />}
             />
+            <Route path="/aboutpage" element={<Aboutpage />} />
           </Routes>
         </div>
       </UserProvider>

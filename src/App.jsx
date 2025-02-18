@@ -7,6 +7,7 @@ import Navbar from "./components/cui/navbar";
 import Notfoundpage from "./pages/user/notfoundpage";
 import { Toaster } from "@/components/ui/toaster";
 import { UserProvider } from "@/context/userContext";
+import Productpage from "./pages/product/productpage";
 
 const App = () => {
   return (
@@ -20,6 +21,10 @@ const App = () => {
             <Route path="/" element={<Homepage />} />
             <Route path="/loginpage" element={<Loginpage />} />
             <Route path="/createuserpage" element={<CreateUserPage />} />
+            <Route
+              path="/category/:productcetagoryname"
+              element={<Productpage />}
+            />
           </Routes>
         </div>
       </UserProvider>

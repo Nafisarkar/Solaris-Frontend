@@ -168,28 +168,28 @@ function Navbar() {
                 aria-labelledby="options-menu"
               >
                 <Link
-                  to="/category/"
+                  to="/category/anime"
                   className="block text-base py-2 hover:underline"
                   role="menuitem"
                 >
                   Anime
                 </Link>
                 <Link
-                  to="/category/"
+                  to="/category/movie"
                   className="block text-base py-2 hover:underline"
                   role="menuitem"
                 >
                   Movie
                 </Link>
                 <Link
-                  to="/category/"
+                  to="/category/car"
                   className="block text-base py-2 hover:underline"
                   role="menuitem"
                 >
                   Cars
                 </Link>
                 <Link
-                  to="/category/"
+                  to="/category/asthetic"
                   className="block text-base py-2 hover:underline"
                   role="menuitem"
                 >

@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Homepage from "./pages/homepage";
 import Loginpage from "./pages/user/loginpage";
 import CreateUserPage from "./pages/user/createuserpage";
-import Navbar from "./components/cui/navbar";
+import Navbar from "./components/cui/Navbar";
 import Notfoundpage from "./pages/user/notfoundpage";
 import { Toaster } from "@/components/ui/toaster";
 import { UserProvider } from "@/context/userContext";

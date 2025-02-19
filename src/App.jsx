@@ -10,6 +10,7 @@ import { UserProvider } from "@/context/userContext";
 import Productpage from "./pages/product/productpage";
 import Aboutpage from "./pages/aboutpage";
 import Productdetailspage from "./pages/product/productdetailspage";
+import Apipage from "./pages/dev/apipage";
 
 const App = () => {
   return (
@@ -32,6 +33,8 @@ const App = () => {
               path="/category/:productcetagoryname/:id"
               element={<Productdetailspage />}
             />
+
+            <Route path="/dev" element={<Apipage />} />
           </Routes>
         </div>
       </UserProvider>

@@ -140,7 +140,7 @@ function Navbar() {
                 to="/aboutpage"
                 className="flex items-center text-lg font-Arapey py-2 px-12 hover:underline"
               >
-                About Us
+                About
                 <ChevronDown className="ml-1 h-2 w-2" />
               </Link>
             </div>

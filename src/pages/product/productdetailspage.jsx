@@ -1,6 +1,10 @@
 import { useParams, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Particles } from "@/components/magicui/particles";
+import {
+  FaRegArrowAltCircleLeft,
+  FaRegArrowAltCircleRight,
+} from "react-icons/fa";
 
 import {
   Card,
@@ -21,7 +25,7 @@ import { Button } from "@/components/ui/button";
 const Productdetailspage = () => {
   const { productcetagoryname, id } = useParams();
   const location = useLocation();
-  const imageFromState = location.state?.image;
+  const imageFromState = location.state.image;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState("a4");
   const [selectedMaterial, setSelectedMaterial] = useState("paper");
@@ -36,10 +40,10 @@ const Productdetailspage = () => {
           id: parseInt(id),
           name: "Chainsaw Man",
           images: [
-            imageFromState ||
-            // "https://i.pinimg.com/736x/ce/61/ce/ce61ce85a1307fdf5189cf1ded43912f.jpg",
-            // "https://i.pinimg.com/736x/d7/b1/22/d7b1223eef2179b41e9ab84fad1bf3c1.jpg",
-            ""
+            imageFromState||
+              // "https://i.pinimg.com/736x/ce/61/ce/ce61ce85a1307fdf5189cf1ded43912f.jpg",
+              // "https://i.pinimg.com/736x/d7/b1/22/d7b1223eef2179b41e9ab84fad1bf3c1.jpg",
+              "",
           ],
           description: "The legendary chainsaw devil hunter",
           basePrice: 200,
@@ -123,13 +127,12 @@ const Productdetailspage = () => {
     if (isRightSwipe) {
       prevSlide();
     }
-
     setTouchEnd(null);
     setTouchStart(null);
   };
 
   return (
-    <div className="mt-2 mx-4 sm:mx-8 md:mx-12 lg:mx-16 xl:mx-20 mb-4 font-Poppins">
+    <div className="mt-2 mx-4 sm:mx-8 md:mx-12 lg:mx-16 xl:mx-20 mb-18 font-Poppins ">
       <div className="fixed inset-0">
         <Particles
           className="w-full h-full opacity-100"
@@ -140,8 +143,8 @@ const Productdetailspage = () => {
           vy={0.1}
         />
       </div>
-      <div className="flex flex-col lg:flex-row gap-4">
-        <Card className=" flex flex-col w-full lg:w-[400px] mx-auto">
+      <div className="flex flex-col lg:flex-row gap-4 lg:h-[82dvh]">
+        <Card className=" flex flex-col w-full lg:basis-2/3  mx-auto ">
           <CardHeader className="p-2 sm:p-3 md:p-4 h-[300px] sm:h-[400px] md:h-[400px] flex-grow bg-amber-100">
             <div
               className="relative h-full"
@@ -165,7 +168,7 @@ const Productdetailspage = () => {
                       aria-label="Previous image"
                     >
                       <span className="text-xl leading-none select-none">
-                        ←
+                        <FaRegArrowAltCircleLeft />
                       </span>
                     </button>
                     <button
@@ -174,7 +177,7 @@ const Productdetailspage = () => {
                       aria-label="Next image"
                     >
                       <span className="text-xl leading-none select-none">
-                        →
+                        <FaRegArrowAltCircleRight />
                       </span>
                     </button>
                   </div>
@@ -188,7 +191,7 @@ const Productdetailspage = () => {
               : "No images"}
           </CardContent>
         </Card>
-        <Card className="flex-1 w-full lg:max-w-[calc(100%-432px)] backdrop-blur-lg bg-black/50">
+        <Card className="flex-1 w-full lg:lg:basis-1/3 backdrop-blur-lg bg-black/50 ">
           <CardHeader className="p-4">
             <CardTitle className="text-xl sm:text-2xl md:text-3xl">
               {product?.name || "Product Details"}
@@ -249,7 +252,7 @@ const Productdetailspage = () => {
                   </div>
                   <Button
                     onClick={handleBuy}
-                    className="w-full text-lg py-4 font-bold mt-2"
+                    className="w-full text-lg py-4 mt-2 font-Poppins"
                   >
                     Buy Now
                   </Button>

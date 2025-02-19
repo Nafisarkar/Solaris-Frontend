@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useState, useEffect } from "react";
 import { Particles } from "@/components/magicui/particles";
@@ -413,13 +413,20 @@ const ProductPage = () => {
                       key={product.id}
                       className="hover:shadow-lg flex flex-col cursor-pointer "
                     >
-                      <CardHeader className="lg:p-8 md:p-4 sm:p-4 p-4 aspect-[3/4] flex-grow bg-amber-100 ">
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-full h-full object-cover rounded-t-lg shadow-[12px_26px_21px_-12px_#474747] transition-all duration-300 hover:scale-105 transform-gpu"
-                        />
-                      </CardHeader>
+                      <Link
+                        to={`/category/${productcetagoryname}/${product.id}`}
+                        key={product.id}
+                        state={{ image: product.image }}
+                      >
+                        <CardHeader className="lg:p-8 md:p-4 sm:p-4 p-4 aspect-[3/4] flex-grow bg-amber-100 ">
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            className="w-full h-full object-cover rounded-t-lg shadow-[12px_26px_21px_-12px_#474747] transition-all duration-300 hover:scale-105 transform-gpu"
+                          />
+                        </CardHeader>
+                      </Link>
+
                       <CardContent className="p-1 min-h-[2rem] flex items-center justify-center shadow-md backdrop-blur-lg bg-black/50">
                         <h3 className="text-xs font-semibold truncate font-Poppins ">
                           {product.name}

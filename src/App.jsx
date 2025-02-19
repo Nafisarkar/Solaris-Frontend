@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { UserProvider } from "@/context/userContext";
 import Productpage from "./pages/product/productpage";
 import Aboutpage from "./pages/aboutpage";
+import Productdetailspage from "./pages/product/productdetailspage";
 
 const App = () => {
   return (
@@ -27,6 +28,10 @@ const App = () => {
               element={<Productpage />}
             />
             <Route path="/aboutpage" element={<Aboutpage />} />
+            <Route
+              path="/category/:productcetagoryname/:id"
+              element={<Productdetailspage />}
+            />
           </Routes>
         </div>
       </UserProvider>

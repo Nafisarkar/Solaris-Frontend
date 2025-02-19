@@ -75,7 +75,7 @@ function Navbar() {
               >
                 <RxHamburgerMenu className="w-6 h-6" />
               </button>
-              <div className="hidden lg:flex items-center space-x-8">
+              <div className="hidden lg:flex items-center space-x-2">
                 <button
                   onClick={toggleAccountDropdown}
                   className="flex items-center text-lg font-Arapey py-2 px-2 hover:underline"

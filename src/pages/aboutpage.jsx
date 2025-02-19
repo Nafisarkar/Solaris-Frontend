@@ -33,6 +33,7 @@ const Aboutpage = () => {
               work together to bring you the best possible products. We are
               committed to providing excellent customer service and ensuring
               that our customers are completely satisfied with their purchases.
+              <h1 className="pt-8">Connect with us</h1>
               <div className="flex items-start justify-start gap-4 mt-4">
                 <a
                   href="https://discord.com/invite/solaris"

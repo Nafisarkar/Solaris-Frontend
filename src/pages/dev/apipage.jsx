@@ -1,23 +1,21 @@
-import axios from "axios";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import axiosInstance from "@/utils/axios";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import { ApiDialog } from "../../components/cui/ApiDialog";
+import { ApiDialog } from "@/components/cui/ApiDialog";
 import JsonView from "react18-json-view";
 import "react18-json-view/src/style.css";
+import Cookies from "universal-cookie";
+import { UserContext } from "@/context/userContext";
+import { useNavigate } from "react-router";
 
 const API_BASE_URL = "http://localhost:3000";
 
 const API_ENDPOINTS = {
-  // get all products
   PRODUCT: `${API_BASE_URL}/api/product`,
-  // get product by category
   PRODUCT_BY_CATEGORY: `${API_BASE_URL}/api/product/category`,
-
-  PRODUCT_VARIANT: `${API_BASE_URL}/api/product/variant`,
-
-  // seet 2 products
+  PRODUCT_VARIANT: `${API_BASE_URL}/api/product`,
   SEED_PRODUCTS: `${API_BASE_URL}/seed/product`,
 };
 
@@ -28,11 +26,17 @@ const API_ACTIONS = {
 };
 
 const Apipage = () => {
-  // Core state
+  // Move ALL hooks to the top level - no conditionals!
+  const { isAdmin } = useContext(UserContext);
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const [data, setData] = useState(null);
   const [requestStatus, setRequestStatus] = useState("idle");
-
-  // Form states
+  const [deleteVarentId, setDeleteVarentId] = useState({
+    productId: "",
+    variantId: "",
+  });
   const [inputs, setInputs] = useState({
     category: "",
     productId: "",
@@ -53,17 +57,69 @@ const Apipage = () => {
     },
   });
 
+  // Check admin permissions
+  useEffect(() => {
+    const checkAdminAccess = async () => {
+      try {
+        const cookies = new Cookies();
+        const cookie = cookies.get("cookie");
+
+        if (!cookie || !isAdmin) {
+          navigate("/loginpage");
+          return;
+        }
+
+        setIsAuthorized(true);
+      } catch (error) {
+        console.error("Authorization check failed:", error);
+        navigate("/loginpage");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAdminAccess();
+  }, [isAdmin, navigate]);
+
   // API request handler
   const makeApiRequest = async (method, url, data = null) => {
     try {
       setRequestStatus("loading");
-      const response = await axios[method](url, data);
-      setData({ status: response.status, data: response.data });
+      const config = {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      let response;
+      switch (method) {
+        case "get":
+          response = await axiosInstance.get(url, config);
+          break;
+        case "post":
+          response = await axiosInstance.post(url, data || {}, config);
+          break;
+        case "delete":
+          response = await axiosInstance.delete(url, config);
+          break;
+        default:
+          throw new Error(`Unsupported method: ${method}`);
+      }
+
+      setData({
+        status: response.status,
+        data: response.data,
+      });
       setRequestStatus("success");
     } catch (error) {
+      console.error("API Error:", error.response?.data || error.message);
       setData({
         status: error.response?.status || 500,
-        error: error.response?.data || { message: "Request failed" },
+        error: {
+          message: error.response?.data?.message || "Request failed",
+          details: error.response?.data || error.message,
+        },
       });
       setRequestStatus("error");
     } finally {
@@ -80,6 +136,13 @@ const Apipage = () => {
     setInputs((prev) => ({
       ...prev,
       product: { ...prev.product, [field]: value },
+    }));
+  };
+
+  const handleDeleteVariantChange = (field, value) => {
+    setDeleteVarentId((prev) => ({
+      ...prev,
+      [field]: value,
     }));
   };
 
@@ -110,9 +173,10 @@ const Apipage = () => {
         `${API_ENDPOINTS.PRODUCT_VARIANT}/${inputs.productId}`
       ),
     seedProducts: () =>
-      makeApiRequest(API_ACTIONS.POST, `${API_ENDPOINTS.SEED_PRODUCTS}`),
+      makeApiRequest(API_ACTIONS.POST, API_ENDPOINTS.SEED_PRODUCTS, {
+        seed: true,
+      }),
     addProductVariant: () => {
-      // Create variant object matching the backend requirements
       const variantData = {
         packfrontimage:
           inputs.variant.packfrontimage || "https://placeholder.com/800x600",
@@ -122,11 +186,16 @@ const Apipage = () => {
         quantity: Number(inputs.variant.quantity) || 12,
         price: Number(inputs.variant.price) || 0,
       };
-
       makeApiRequest(
         API_ACTIONS.POST,
         `${API_ENDPOINTS.PRODUCT}/${inputs.variant.forProduct}`,
         variantData
+      );
+    },
+    deleteProductVariant: () => {
+      makeApiRequest(
+        API_ACTIONS.DELETE,
+        `${API_ENDPOINTS.PRODUCT_VARIANT}/${deleteVarentId.productId}/${deleteVarentId.variantId}`
       );
     },
   };
@@ -164,7 +233,26 @@ const Apipage = () => {
       onSubmit: apiActions.createProduct,
     },
     {
-      title: "Add Product Variant",
+      title: "Delete Product Variant",
+      description: "Enter Details for to delete Variant",
+      buttonText: "Delete Product Variant",
+      inputPlaceholder: "Product ID (required)",
+      inputValue: deleteVarentId.productId,
+      onInputChange: (e) =>
+        handleDeleteVariantChange("productId", e.target.value),
+      additionalInputs: [
+        {
+          placeholder: "Variant Id",
+          value: deleteVarentId.variantId,
+          onChange: (e) =>
+            handleDeleteVariantChange("variantId", e.target.value),
+        },
+      ],
+      onSubmit: apiActions.deleteProductVariant,
+      variant: "destructive",
+    },
+    {
+      title: "Delete A Product Variant",
       description: "Enter variant details for the product",
       buttonText: "Add Variant",
       inputPlaceholder: "Product ID (required)",
@@ -240,16 +328,25 @@ const Apipage = () => {
     },
   ];
 
+  // Early return for loading/unauthorized states
+  if (isLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+        <p className="ml-2">Verifying admin access...</p>
+      </div>
+    );
+  }
+
+  // Early return for unauthorized
+  if (!isAuthorized) {
+    return null;
+  }
+
+  // Return main component UI when authorized
   return (
     <div className="h-fit font-Poppins">
-      {" "}
-      {/* Add full height background */}
       <div className="max-w-7xl mx-auto p-4">
-        {" "}
-        {/* Add padding */}
-        {/* <h1 className="text-xl font-semibold mb-6 text-center text-white">
-          API Testing Dashboard
-        </h1> */}
         <div className="grid gap-4 lg:grid-cols-2">
           {/* Response Data Card */}
           <Card className="p-4">

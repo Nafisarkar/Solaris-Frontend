@@ -17,6 +17,7 @@ import { validateLogin } from "../../validator/validator";
 import getRandomEmojis from "../../helper/randomemoji";
 import { useUserContext } from "../../context/userContext";
 import { userLogout } from "../../controllers/logout.controller";
+import { Particles } from "@/components/magicui/particles";
 
 const Loginpage = () => {
   const navigator = useNavigate();
@@ -60,7 +61,7 @@ const Loginpage = () => {
           variant: "destructive",
           title: "Login Failed",
           description:
-            error.response?.data?.message ||
+            error.response.data.message ||
             "Please check your credentials and try again.",
         });
         console.error("Login error:", error);
@@ -79,9 +80,19 @@ const Loginpage = () => {
   };
 
   return (
-    <div className=" flex items-center justify-center">
-      <div className="flex items-center justify-center p-15 font-Poppins">
-        <Card className="w-2/3 min-w-[18rem] max-w-[24rem]">
+    <div className="min-h-screen relative">
+      <div className="fixed inset-0 -z-10 pointer-events-none">
+        <Particles
+          className="w-full h-full opacity-100"
+          quantity={140}
+          ease={20}
+          refresh={true}
+          vx={0.1}
+          vy={0.1}
+        />
+      </div>
+      <div className="flex items-center justify-center p-15 font-Poppins relative z-10">
+        <Card className="w-2/3 min-w-[18rem] max-w-[24rem] backdrop-blur-sm bg-background/95">
           <CardHeader>
             <CardTitle className="text-2xl font-bold">
               {isLoggedin ? "Logged In" : "Login"}

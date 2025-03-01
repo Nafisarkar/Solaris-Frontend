@@ -6,7 +6,8 @@ import checkLoginUser from "../../validator/loginchecker";
 import { UserContext } from "@/context/userContext";
 
 function Navbar() {
-  const { isLoggedin, setIsLoggedin, userNameNav } = useContext(UserContext);
+  const { isLoggedin, setIsLoggedin, userNameNav, isAdmin } =
+    useContext(UserContext);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
@@ -80,9 +81,17 @@ function Navbar() {
                   onClick={toggleAccountDropdown}
                   className="flex items-center text-lg font-Arapey py-2 px-2 hover:underline"
                 >
-                  {userNameNav
-                    ? userNameNav.charAt(0).toUpperCase() + userNameNav.slice(1)
-                    : "Profile"}
+                  {userNameNav ? (
+                    <>
+                      {userNameNav.charAt(0).toUpperCase() +
+                        userNameNav.slice(1)}
+                      {isAdmin && (
+                        <span className="ml-1 text-amber-400">[ Admin ]</span>
+                      )}
+                    </>
+                  ) : (
+                    "Profile"
+                  )}
                   <ChevronDown className="ml-1 h-2 w-2" />
                 </button>
                 <button
@@ -117,9 +126,16 @@ function Navbar() {
                 onClick={toggleAccountDropdown}
                 className="flex items-center text-lg font-Arapey py-2 px-12 hover:underline"
               >
-                {userNameNav
-                  ? userNameNav.charAt(0).toUpperCase() + userNameNav.slice(1)
-                  : "Profile"}
+                {userNameNav ? (
+                  <>
+                    {userNameNav.charAt(0).toUpperCase() + userNameNav.slice(1)}
+                    {isAdmin && (
+                      <span className="ml-1 text-amber-400">[ Admin ]</span>
+                    )}
+                  </>
+                ) : (
+                  "Profile"
+                )}
                 <ChevronDown className="ml-1 h-2 w-2" />
               </button>
               <button
@@ -170,6 +186,29 @@ function Navbar() {
                     Login
                   </Link>
                 )}
+                {isLoggedin && (
+                  <span>
+                    <Link
+                      to="/cartpage"
+                      className="block text-base py-2 hover:underline"
+                      role="menuitem"
+                    >
+                      Cart
+                    </Link>
+                  </span>
+                )}
+
+                {isLoggedin && isAdmin && (
+                  <span className=" text-red-400">
+                    <Link
+                      to="/dev"
+                      className="block text-base py-2 hover:underline"
+                      role="menuitem"
+                    >
+                      Developer
+                    </Link>
+                  </span>
+                )}
               </div>
             </div>
           )}
@@ -194,6 +233,13 @@ function Navbar() {
                   role="menuitem"
                 >
                   Movie
+                </Link>
+                <Link
+                  to="/category/game"
+                  className="block text-base py-2 hover:underline"
+                  role="menuitem"
+                >
+                  Games
                 </Link>
                 <Link
                   to="/category/car"

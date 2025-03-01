@@ -6,7 +6,7 @@ import {
   useContext,
 } from "react";
 import checkLoginUser from "../validator/loginchecker";
-import { getUserName } from "../../helper/userLocalStorage";
+import { getUserName, getLocalStorage } from "../../helper/userLocalStorage";
 
 export const UserContext = createContext();
 
@@ -19,20 +19,48 @@ export function UserProvider({ children }) {
   const [isLoggedin, setIsLoggedin] = useState(false);
   const [userNameNav, setUserNameNav] = useState("");
   const [userInfo, setUserInfo] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [cartProducts, setCartProducts] = useState([]);
+
+  // Save cart to localStorage whenever it changes
+  useEffect(() => {
+    if (cartProducts.length > 0) {
+      localStorage.setItem("userCart", JSON.stringify(cartProducts));
+    }
+  }, [cartProducts]);
 
   useEffect(() => {
     const checkLogin = async () => {
       const isLoggedIn = await checkLoginUser();
       setIsLoggedin(isLoggedIn);
       console.log(
-        `Navbar : User is ${isLoggedIn ? "Logged In" : "Not Logged In"}`
+        `User Context : User is ${isLoggedIn ? "Logged In" : "Not Logged In"}`
       );
       if (isLoggedIn) {
         const username = getUserName();
         setUserNameNav(username);
-        console.log(`Navbar : User Name is ${username}`);
+        const userData = getLocalStorage();
+        console.log(`User Context : User Data is ${userData}`);
+        const user = JSON.parse(userData);
+        setUserInfo(user);
+
+        if (user.admin) {
+          setIsAdmin(true);
+        } else {
+          setIsAdmin();
+          console.log(`User Context : User is Admin : ${user.admin}`);
+        }
+
+        // Load cart from localStorage
+        const savedCart = localStorage.getItem("userCart");
+        if (savedCart) {
+          setCartProducts(JSON.parse(savedCart));
+        }
       } else {
         setUserNameNav("");
+        // Clear cart on logout
+        setCartProducts([]);
+        localStorage.removeItem("userCart");
       }
     };
 
@@ -48,7 +76,11 @@ export function UserProvider({ children }) {
         userNameNav,
         setUserNameNav,
         userInfo,
+        isAdmin,
+        setIsAdmin,
         setUserInfo,
+        cartProducts,
+        setCartProducts,
       },
     },
     children

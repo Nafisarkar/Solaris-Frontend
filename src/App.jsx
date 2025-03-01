@@ -1,5 +1,6 @@
+/* eslint-disable react/prop-types */
 import { ThemeProvider } from "@/components/theme-provider";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate, useParams } from "react-router-dom";
 import Homepage from "./pages/homepage";
 import Loginpage from "./pages/user/loginpage";
 import CreateUserPage from "./pages/user/createuserpage";
@@ -11,6 +12,21 @@ import Productpage from "./pages/product/productpage";
 import Aboutpage from "./pages/aboutpage";
 import Productdetailspage from "./pages/product/productdetailspage";
 import Apipage from "./pages/dev/apipage";
+import Productcartpage from "./pages/product/productcartpage";
+
+// Define valid categories
+const VALID_CATEGORIES = ["anime", "movie", "car", "asthetic", "game"];
+
+// Category route validator component
+const CategoryRoute = ({ element: Element }) => {
+  const { productcetagoryname } = useParams();
+
+  if (!VALID_CATEGORIES.includes(productcetagoryname)) {
+    return <Navigate to="/notfound" replace />;
+  }
+
+  return <Element />;
+};
 
 const App = () => {
   return (
@@ -24,16 +40,22 @@ const App = () => {
             <Route path="/" element={<Homepage />} />
             <Route path="/loginpage" element={<Loginpage />} />
             <Route path="/createuserpage" element={<CreateUserPage />} />
-            <Route
-              path="/category/:productcetagoryname"
-              element={<Productpage />}
-            />
-            <Route path="/aboutpage" element={<Aboutpage />} />
+
+            {/* product Cart page for logged in users */}
+            <Route path="/cartpage" element={<Productcartpage />} />
+
+            {/* Protected category routes */}
             <Route
               path="/category/:productcetagoryname/:id"
-              element={<Productdetailspage />}
+              element={<CategoryRoute element={Productdetailspage} />}
+            />
+            <Route
+              path="/category/:productcetagoryname"
+              element={<CategoryRoute element={Productpage} />}
             />
 
+            <Route path="/notfound" element={<Notfoundpage />} />
+            <Route path="/aboutpage" element={<Aboutpage />} />
             <Route path="/dev" element={<Apipage />} />
           </Routes>
         </div>

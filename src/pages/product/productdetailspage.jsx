@@ -107,6 +107,7 @@ const ProductDetailsPage = () => {
   const handleBuy = () => {
     if (!isLoggedin) {
       toast({
+        duration: 2000,
         variant: "destructive",
         title: "Authentication required",
         description: "Please login to add items to cart",
@@ -140,6 +141,7 @@ const ProductDetailsPage = () => {
 
     if (existingItemIndex >= 0) {
       toast({
+        duration: 2000,
         title: "Already in cart",
         description: "This item is already in your cart",
       });
@@ -147,6 +149,7 @@ const ProductDetailsPage = () => {
       // Add new item
       setCartProducts((prev) => [...prev, newItem]);
       toast({
+        duration: 2000,
         title: "Item added",
         description: "Product added to your cart successfully",
       });

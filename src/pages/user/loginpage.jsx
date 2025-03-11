@@ -44,9 +44,12 @@ const Loginpage = () => {
       .post("https://solaris-backend.vercel.app/api/user/login", user)
       .then((response) => {
         const cookies = new Cookies();
-        cookies.set("cookie", response.data.cookie, { path: "/" });
+        console.log("Login successful: " + JSON.stringify(response.data.token));
+        cookies.set("cookie", response.data.token, { path: "/" });
+
         localStorage.setItem("userData", JSON.stringify(response.data.data));
         setIsLoggedin(true);
+        
         setUserNameNav(response.data.data.name);
         toast({
           variant: "default",
@@ -61,22 +64,29 @@ const Loginpage = () => {
           variant: "destructive",
           title: "Login Failed",
           description:
-            error.response.data.message ||
-            "Please check your credentials and try again.",
+            error.response || "Please check your credentials and try again.",
         });
         console.error("Login error:", error);
       });
   };
 
-  const handleLogout = () => {
-    userLogout(setIsLoggedin, setUserNameNav).catch((error) => {
+  const handleLogout = async () => {
+    try {
+      await userLogout();
+      // Update state after logout
+      setIsLoggedin(false);
+      setUserNameNav("");
+      toast({
+        title: "Logged out",
+        description: "You have been successfully logged out.",
+      });
+    } catch (error) {
       toast({
         variant: "destructive",
         title: "Logout Failed",
         description: "Unable to logout. Please try again.",
       });
-      console.error("Logout error:", error);
-    });
+    }
   };
 
   return (

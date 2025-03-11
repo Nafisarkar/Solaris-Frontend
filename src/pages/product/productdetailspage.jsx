@@ -1,5 +1,5 @@
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { Particles } from "@/components/magicui/particles";
 import {
   FaRegArrowAltCircleLeft,
@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { UserContext } from "../../context/userContext";
+import { useUserContext } from "@/context/userContext";
 import { useToast } from "@/hooks/use-toast";
 
 // Constants
@@ -38,7 +38,7 @@ const MATERIALS = {
 
 const ProductDetailsPage = () => {
   const { toast } = useToast();
-  const { isLoggedin, cartProducts, setCartProducts } = useContext(UserContext);
+  const { isLoggedin, cartProducts, setCartProducts } = useUserContext();
   const navigate = useNavigate();
 
   const { productcetagoryname } = useParams();
@@ -130,8 +130,11 @@ const ProductDetailsPage = () => {
       totalPrice: parseFloat(calculatePrice()),
     };
 
+    // Initialize cartProducts as empty array if undefined
+    const currentCart = cartProducts || [];
+
     // Check if this item already exists in cart
-    const existingItemIndex = cartProducts.findIndex(
+    const existingItemIndex = currentCart.findIndex(
       (item) =>
         item.productId === newItem.productId &&
         item.variantId === newItem.variantId &&
@@ -146,8 +149,17 @@ const ProductDetailsPage = () => {
         description: "This item is already in your cart",
       });
     } else {
-      // Add new item
-      setCartProducts((prev) => [...prev, newItem]);
+      // Add new item and save to localStorage
+      const updatedCart = [...currentCart, newItem];
+      setCartProducts(updatedCart);
+
+      // Save to localStorage for persistence
+      try {
+        localStorage.setItem("userCart", JSON.stringify(updatedCart));
+      } catch (error) {
+        console.error("Error saving to localStorage:", error);
+      }
+
       toast({
         duration: 2000,
         title: "Item added",

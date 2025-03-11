@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ShoppingBag, TrashIcon, MapPin, Phone } from "lucide-react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Particles } from "@/components/magicui/particles";
 

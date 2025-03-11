@@ -85,23 +85,17 @@ const Apipage = () => {
   const makeApiRequest = async (method, url, data = null) => {
     try {
       setRequestStatus("loading");
-      const config = {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
 
       let response;
       switch (method) {
         case "get":
-          response = await axiosInstance.get(url, config);
+          response = await axiosInstance.get(url);
           break;
         case "post":
-          response = await axiosInstance.post(url, data || {}, config);
+          response = await axiosInstance.post(url, data || {});
           break;
         case "delete":
-          response = await axiosInstance.delete(url, config);
+          response = await axiosInstance.delete(url);
           break;
         default:
           throw new Error(`Unsupported method: ${method}`);

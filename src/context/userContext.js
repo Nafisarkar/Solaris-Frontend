@@ -1,88 +1,88 @@
-import {
-  useState,
-  createContext,
-  createElement,
-  useEffect,
-  useContext,
-} from "react";
-import checkLoginUser from "../validator/loginchecker";
-import { getUserName, getLocalStorage } from "../../helper/userLocalStorage";
+import { createContext, useState, useContext, useEffect } from "react";
+import axiosInstance from "@/utils/axios";
 
 export const UserContext = createContext();
 
-export function useUserContext() {
-  return useContext(UserContext);
-}
-
-// eslint-disable-next-line react/prop-types
-export function UserProvider({ children }) {
+export const UserProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
   const [isLoggedin, setIsLoggedin] = useState(false);
-  const [userNameNav, setUserNameNav] = useState("");
-  const [userInfo, setUserInfo] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
-  const [cartProducts, setCartProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Save cart to localStorage whenever it changes
+  // Check authentication status on mount
   useEffect(() => {
-    if (cartProducts.length > 0) {
-      localStorage.setItem("userCart", JSON.stringify(cartProducts));
-    }
-  }, [cartProducts]);
-
-  useEffect(() => {
-    const checkLogin = async () => {
-      const isLoggedIn = await checkLoginUser();
-      setIsLoggedin(isLoggedIn);
-      console.log(
-        `User Context : User is ${isLoggedIn ? "Logged In" : "Not Logged In"}`
-      );
-      if (isLoggedIn) {
-        const username = getUserName();
-        setUserNameNav(username);
-        const userData = getLocalStorage();
-        console.log(`User Context : User Data is ${userData}`);
-        const user = JSON.parse(userData);
-        setUserInfo(user);
-
-        if (user.admin) {
-          setIsAdmin(true);
-        } else {
-          setIsAdmin();
-          console.log(`User Context : User is Admin : ${user.admin}`);
+    const checkAuth = async () => {
+      try {
+        const response = await axiosInstance.get("/api/user/me");
+        if (response.data.success) {
+          setUser(response.data.data);
+          setIsLoggedin(true);
+          setIsAdmin(response.data.data.role === "admin");
         }
-
-        // Load cart from localStorage
-        const savedCart = localStorage.getItem("userCart");
-        if (savedCart) {
-          setCartProducts(JSON.parse(savedCart));
-        }
-      } else {
-        setUserNameNav("");
-        // Clear cart on logout
-        setCartProducts([]);
-        localStorage.removeItem("userCart");
+      } catch (error) {
+        console.log("Not logged in");
+        localStorage.removeItem("token");
+      } finally {
+        setLoading(false);
       }
     };
 
-    checkLogin();
-  }, [isLoggedin]);
+    checkAuth();
+  }, []);
 
-  return createElement(
-    UserContext.Provider,
-    {
-      value: {
-        isLoggedin,
-        setIsLoggedin,
-        userNameNav,
-        setUserNameNav,
-        userInfo,
-        isAdmin,
-        setIsAdmin,
-        setUserInfo,
-        cartProducts,
-        setCartProducts,
-      },
-    },
-    children
-  );
-}
+  const login = async (email, password) => {
+    try {
+      const response = await axiosInstance.post("/api/user/login", {
+        email,
+        password,
+      });
+
+      if (response.data.success) {
+        // Store token in localStorage
+        if (response.data.token) {
+          localStorage.setItem("token", response.data.token);
+        }
+
+        // Store user data
+        setUser(response.data.data);
+        setIsLoggedin(true);
+        setIsAdmin(response.data.data.role === "admin");
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Login error:", error.response?.data || error.message);
+      return false;
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await axiosInstance.post("/api/user/logout");
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      // Always clear local state even if API call fails
+      localStorage.removeItem("token");
+      setUser(null);
+      setIsLoggedin(false);
+      setIsAdmin(false);
+    }
+  };
+
+  const value = {
+    user,
+    setUser,
+    isLoggedin,
+    setIsLoggedin,
+    isAdmin,
+    setIsAdmin,
+    login,
+    logout,
+    loading,
+  };
+
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+};
+
+export const useUserContext = () => useContext(UserContext);

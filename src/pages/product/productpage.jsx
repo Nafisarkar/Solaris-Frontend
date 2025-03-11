@@ -5,7 +5,7 @@ import { Particles } from "@/components/magicui/particles";
 import axios from "axios";
 import { staticProductData } from "./staticData";
 
-const API_BASE_URL = "http://localhost:3000/api";
+const API_BASE_URL = "https://solaris-backend.vercel.app/api";
 
 const ProductPage = () => {
   const { productcetagoryname } = useParams();

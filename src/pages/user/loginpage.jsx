@@ -41,7 +41,7 @@ const Loginpage = () => {
     }
 
     axios
-      .post("http://localhost:3000/api/user/login", user)
+      .post("https://solaris-backend.vercel.app/api/user/login", user)
       .then((response) => {
         const cookies = new Cookies();
         cookies.set("cookie", response.data.cookie, { path: "/" });

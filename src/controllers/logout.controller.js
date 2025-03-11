@@ -4,7 +4,7 @@ import { deleteLocalStorage } from "../../helper/userLocalStorage";
 
 export const userLogout = (setIsLoggedin, setUserNameNav) => {
   return axios
-    .delete("http://localhost:3000/api/user/logout")
+    .delete("https://solaris-backend.vercel.app/api/user/logout")
     .then((response) => {
       const cookies = new Cookies();
       cookies.remove("cookie");

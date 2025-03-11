@@ -10,7 +10,7 @@ import Cookies from "universal-cookie";
 import { UserContext } from "@/context/userContext";
 import { useNavigate } from "react-router";
 
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = "https://solaris-backend.vercel.app";
 
 const API_ENDPOINTS = {
   PRODUCT: `${API_BASE_URL}/api/product`,

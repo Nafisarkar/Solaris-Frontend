@@ -40,14 +40,14 @@ const CreateUserPage = () => {
 
     try{
       axios
-      .post('http://localhost:3000/api/user/signup', CreateUser)
-      .then((response) => {
-        console.log(response.data.message);
-        window.location.href = '/loginpage';
-      })
-      .catch((error) => {
-        console.log(error.response.data.message);
-      });
+        .post("https://solaris-backend.vercel.app/api/user/signup", CreateUser)
+        .then((response) => {
+          console.log(response.data.message);
+          window.location.href = "/loginpage";
+        })
+        .catch((error) => {
+          console.log(error.response.data.message);
+        });
     }
     catch(e){
       console.log(e);

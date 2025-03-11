@@ -79,7 +79,7 @@ function Navbar() {
               <div className="hidden lg:flex items-center space-x-2">
                 <button
                   onClick={toggleAccountDropdown}
-                  className="flex items-center text-lg font-Arapey py-2 px-2 hover:underline"
+                  className="flex items-center text-lg font-Arapey py-2 px-2 hover:underline cursor-pointer"
                 >
                   {userNameNav ? (
                     <>
@@ -96,21 +96,21 @@ function Navbar() {
                 </button>
                 <button
                   onClick={toggleCategoryDropdown}
-                  className="flex items-center text-lg font-Arapey py-2 px-2 hover:underline"
+                  className="flex items-center text-lg font-Arapey py-2 px-2 hover:underline cursor-pointer"
                 >
                   Categories
                   <ChevronDown className="ml-1 h-2 w-2" />
                 </button>
                 <button
                   onClick={toggleHallOfFameDropdown}
-                  className="flex items-center text-lg font-Arapey py-2 px-2 hover:underline"
+                  className="flex items-center text-lg font-Arapey py-2 px-2 hover:underline cursor-pointer"
                 >
                   Hall Of Fame
                   <ChevronDown className="ml-1 h-2 w-2" />
                 </button>
                 <Link
                   to={"/aboutpage"}
-                  className="flex items-center text-lg font-Arapey py-2 px-2 hover:underline"
+                  className="flex items-center text-lg font-Arapey py-2 px-2 hover:underline cursor-pointer"
                 >
                   About Us
                   <ChevronDown className="ml-1 h-2 w-2" />
@@ -140,21 +140,21 @@ function Navbar() {
               </button>
               <button
                 onClick={toggleCategoryDropdown}
-                className="flex items-center text-lg font-Arapey py-2 px-12 hover:underline"
+                className="flex items-center text-lg font-Arapey py-2 px-12 hover:underline cursor-pointer"
               >
                 Categories
                 <ChevronDown className="ml-1 h-2 w-2" />
               </button>
               <button
                 onClick={toggleHallOfFameDropdown}
-                className="flex items-center text-lg font-Arapey py-2 px-12 hover:underline"
+                className="flex items-center text-lg font-Arapey py-2 px-12 hover:underline cursor-pointer"
               >
                 Hall Of Fame
                 <ChevronDown className="ml-1 h-2 w-2" />
               </button>
               <Link
                 to="/aboutpage"
-                className="flex items-center text-lg font-Arapey py-2 px-12 hover:underline"
+                className="flex items-center text-lg font-Arapey py-2 px-12 hover:underline cursor-pointer"
               >
                 About
                 <ChevronDown className="ml-1 h-2 w-2" />
@@ -222,7 +222,7 @@ function Navbar() {
               >
                 <Link
                   to="/category/anime"
-                  className="block text-base py-2 hover:underline"
+                  className="block text-base py-2 hover:underline cursor-pointer"
                   role="menuitem"
                 >
                   Anime
@@ -261,7 +261,7 @@ function Navbar() {
           {isHallOfFameDropdownOpen && (
             <div className="absolute z-50 w-full shadow-lg backdrop-blur-lg bg-black/80 font-Arapey">
               <div
-                className="px-12 py-4"
+                className="px-12 py-4 "
                 role="menu"
                 aria-orientation="vertical"
                 aria-labelledby="options-menu"
